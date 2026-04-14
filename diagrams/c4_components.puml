@@ -1,0 +1,40 @@
+@startuml C4_Components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Barber Shop Backend - Diagrama de Componentes (C4 Level 3)
+
+Container_Boundary(api_layer, "API Layer") {
+    Component(views, "API Views", "Django REST Framework", "Reciben HTTP requests, validan formato y delegan a servicios")
+    Component(serializers, "Serializers", "DRF Serializers", "Validación de formato y transformación de datos")
+}
+
+Container_Boundary(app_layer, "Application Layer") {
+    Component(appointment_service, "AppointmentService", "Facade Pattern", "Orquesta el flujo completo de agendamiento: disponibilidad, creación, estado, notificaciones")
+    Component(availability_service, "AvailabilityService", "Strategy Pattern", "Calcula slots disponibles según estrategia configurable")
+    Component(appointment_factory, "AppointmentFactory", "Factory Method", "Crea citas con validaciones y campos calculados")
+    Component(appointment_states, "AppointmentStates", "State Pattern", "Gestiona transiciones de estado válidas para citas")
+    Component(event_manager, "AppointmentEventManager", "Observer Pattern", "Notifica observers cuando se crean/modifican citas")
+}
+
+Container_Boundary(domain_layer, "Domain Layer") {
+    Component(models, "Domain Models", "Django Models", "Service, Barber, BarberSchedule, Client, Appointment")
+    Component(enums, "Enums", "Python Enums", "AppointmentStatus, DayOfWeek")
+    Component(exceptions, "Domain Exceptions", "Python Exceptions", "Excepciones de reglas de negocio")
+}
+
+ContainerDb(db, "PostgreSQL", "Base de Datos Relacional")
+
+Rel(views, serializers, "Valida datos con")
+Rel(views, appointment_service, "Delega lógica a")
+Rel(appointment_service, availability_service, "Consulta disponibilidad")
+Rel(appointment_service, appointment_factory, "Crea citas")
+Rel(appointment_service, appointment_states, "Valida transiciones")
+Rel(appointment_service, event_manager, "Notifica eventos")
+Rel(appointment_factory, availability_service, "Valida disponibilidad")
+Rel(availability_service, models, "Consulta horarios y citas")
+Rel(appointment_factory, models, "Crea instancias de Appointment")
+Rel(appointment_states, enums, "Usa AppointmentStatus")
+Rel(appointment_states, exceptions, "Lanza InvalidStateTransitionError")
+Rel(models, db, "Persiste datos")
+
+@enduml

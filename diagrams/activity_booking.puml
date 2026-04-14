@@ -1,0 +1,72 @@
+@startuml Activity_Booking
+title Flujo de Agendamiento de Cita
+
+|Cliente (Frontend)|
+start
+:Selecciona un servicio;
+:Selecciona un barbero;
+:Selecciona una fecha;
+
+|Backend API|
+:GET /barbers/{id}/availability/
+Recibe fecha + service_id;
+
+:AvailabilityService.get_available_slots();
+note right
+  **Strategy Pattern**
+  StandardAvailabilityStrategy:
+  1. Consulta BarberSchedule del día
+  2. Consulta citas existentes (no canceladas)
+  3. Genera slots y excluye solapados
+end note
+
+:Retorna slots disponibles;
+
+|Cliente (Frontend)|
+:Muestra slots al cliente;
+:Selecciona un horario;
+:Ingresa datos personales
+(nombre, teléfono, email);
+:Presiona "Confirmar Cita";
+
+|Backend API|
+:POST /appointments/
+Recibe datos de la cita;
+
+:AppointmentService.create_appointment();
+note right
+  **Facade Pattern**
+  Coordina todo el flujo
+end note
+
+:AppointmentFactory.create_appointment();
+note right
+  **Factory Method Pattern**
+  1. Calcula end_time
+  2. Valida disponibilidad
+  3. Crea Appointment
+end note
+
+if (¿Slot disponible?) then (sí)
+  :Persiste Appointment
+  (status = PENDING);
+
+  :EventManager.notify_created();
+  note right
+    **Observer Pattern**
+    LoggingObserver registra
+    el evento en log
+  end note
+
+  |Cliente (Frontend)|
+  :Muestra "Cita Confirmada!";
+else (no)
+  |Backend API|
+  :Retorna error 400
+  "Horario no disponible";
+  |Cliente (Frontend)|
+  :Muestra mensaje de error;
+endif
+
+stop
+@enduml

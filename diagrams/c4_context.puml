@@ -1,0 +1,16 @@
+@startuml C4_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Sistema Barber Shop - Diagrama de Contexto (C4 Level 1)
+
+Person(client, "Cliente", "Persona que agenda citas en la barbería")
+Person(barber, "Barbero", "Profesional que atiende las citas")
+Person(admin, "Administrador", "Gestiona servicios y barberos del sistema")
+
+System(barbershop, "Barber Shop System", "Sistema de agendamiento digital para barbería. Permite gestionar servicios, barberos, citas y disponibilidad.")
+
+Rel(client, barbershop, "Agenda citas, consulta servicios y barberos disponibles")
+Rel(barber, barbershop, "Consulta su agenda diaria, marca citas como completadas")
+Rel(admin, barbershop, "Crea servicios, registra barberos, configura horarios")
+
+@enduml

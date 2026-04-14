@@ -1,0 +1,26 @@
+@startuml C4_Containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Sistema Barber Shop - Diagrama de Contenedores (C4 Level 2)
+
+Person(client, "Cliente")
+Person(barber, "Barbero")
+Person(admin, "Administrador")
+
+System_Boundary(barbershop, "Barber Shop System") {
+    Container(frontend, "Frontend SPA", "React + MUI + Vite", "Interfaz web responsive con diseño dark+gold. Wizard de agendamiento en 4 pasos.")
+    Container(backend, "Backend API", "Django + DRF", "API REST que expone endpoints para servicios, barberos, citas y disponibilidad. Implementa lógica de negocio con patrones GoF.")
+    ContainerDb(db, "Base de Datos", "PostgreSQL 15", "Almacena servicios, barberos, horarios, clientes y citas con constraints de integridad.")
+    Container(nginx, "Reverse Proxy", "Nginx", "Sirve el frontend estático y proxia las peticiones /api/ al backend.")
+}
+
+Rel(client, nginx, "Navega y agenda citas", "HTTPS")
+Rel(barber, nginx, "Consulta agenda, cambia estados", "HTTPS")
+Rel(admin, nginx, "Gestiona servicios y barberos", "HTTPS")
+
+Rel(nginx, frontend, "Sirve archivos estáticos", "HTTP")
+Rel(nginx, backend, "Proxy /api/", "HTTP")
+Rel(frontend, backend, "Consume API REST", "HTTP/JSON")
+Rel(backend, db, "Lee/escribe datos", "TCP/5432")
+
+@enduml
