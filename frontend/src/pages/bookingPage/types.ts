@@ -4,6 +4,7 @@ import { ClientData } from '../../components/appointment/types';
 export interface BookingPageViewProps {
   activeStep: number;
   selectedService: Service | null;
+  preselectedServiceId?: number;
   selectedBarber: BarberListItem | null;
   selectedDate: string;
   selectedSlot: Slot | null;
@@ -13,6 +14,7 @@ export interface BookingPageViewProps {
   error: string | null;
   canGoNext: boolean;
   onServiceSelect: (service: Service) => void;
+  onPreselectedServiceResolved: (service: Service | null) => void;
   onBarberSelect: (barber: BarberListItem) => void;
   onDateChange: (date: string) => void;
   onSlotSelect: (slot: Slot) => void;

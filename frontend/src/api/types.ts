@@ -1,6 +1,8 @@
 export interface Service {
   id: number;
   name: string;
+  description: string;
+  popularity_badge: string;
   price: string;
   duration_minutes: number;
   is_active: boolean;

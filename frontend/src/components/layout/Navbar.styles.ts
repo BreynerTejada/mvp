@@ -5,14 +5,14 @@ export const toolbar: SxProps<Theme> = {
   width: '100%',
   mx: 'auto',
   px: { xs: 2, md: 4 },
-  py: 1,
+  py: 1.1,
 };
 
 export const logoText: SxProps<Theme> = {
   cursor: 'pointer',
   fontFamily: "'Playfair Display', serif",
   fontWeight: 700,
-  fontSize: '1.3rem',
+  fontSize: '1.34rem',
   letterSpacing: '0.05em',
   flexGrow: 1,
 };
@@ -20,13 +20,13 @@ export const logoText: SxProps<Theme> = {
 export const navLinksContainer: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
-  gap: 3,
+  gap: 2.2,
 };
 
 export const navButton: SxProps<Theme> = {
-  color: 'text.primary',
-  fontSize: '0.8rem',
-  letterSpacing: '0.08em',
+  color: 'text.secondary',
+  fontSize: '0.73rem',
+  letterSpacing: '0.1em',
   fontWeight: 500,
   '&:hover': {
     color: 'primary.main',
@@ -36,14 +36,24 @@ export const navButton: SxProps<Theme> = {
 
 export const highlightNavButton: SxProps<Theme> = {
   color: 'primary.main',
-  fontSize: '0.8rem',
-  fontWeight: 500,
+  fontSize: '0.73rem',
+  fontWeight: 600,
+  letterSpacing: '0.1em',
 };
 
 export const agendaButton: SxProps<Theme> = {
-  fontSize: '0.75rem',
-  px: 3,
-  ml: 1,
+  fontSize: '0.71rem',
+  px: 2.6,
+  py: 0.9,
+  ml: 0.6,
+  borderRadius: 1,
+  fontWeight: 700,
+  letterSpacing: '0.09em',
+  boxShadow: '0 4px 18px rgba(196, 163, 90, 0.28)',
+  '&:hover': {
+    boxShadow: '0 8px 24px rgba(196, 163, 90, 0.4)',
+    transform: 'translateY(-1px)',
+  },
 };
 
 export const loginButton: SxProps<Theme> = {

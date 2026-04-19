@@ -21,6 +21,7 @@ import {
 const BookingPageView: React.FC<BookingPageViewProps> = ({
   activeStep,
   selectedService,
+  preselectedServiceId,
   selectedBarber,
   selectedDate,
   selectedSlot,
@@ -30,6 +31,7 @@ const BookingPageView: React.FC<BookingPageViewProps> = ({
   error,
   canGoNext,
   onServiceSelect,
+  onPreselectedServiceResolved,
   onBarberSelect,
   onDateChange,
   onSlotSelect,
@@ -62,6 +64,8 @@ const BookingPageView: React.FC<BookingPageViewProps> = ({
             <ServiceStepContainer
               selectedService={selectedService}
               onServiceSelect={onServiceSelect}
+              preselectedServiceId={preselectedServiceId}
+              onPreselectedServiceResolved={onPreselectedServiceResolved}
             />
           )}
           {activeStep === 1 && (

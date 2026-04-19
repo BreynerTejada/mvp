@@ -2,12 +2,13 @@ import { SxProps, Theme } from '@mui/material';
 
 export const confirmationWrapperSx: SxProps<Theme> = {
   minHeight: '80vh',
-  background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)',
+  background: '#0d0d0d',
 };
 
 export const pageWrapperSx: SxProps<Theme> = {
   py: 6,
   minHeight: '80vh',
+  background: '#0d0d0d',
 };
 
 export const pageTitleSx: SxProps<Theme> = {

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAppointments } from '../../hooks/useAppointments';
 import { Service, BarberListItem, Slot } from '../../api/types';
 import { ClientData } from '../../components/appointment/types';
@@ -17,8 +18,28 @@ const BookingPageContainer: React.FC = () => {
     email: '',
   });
   const [confirmed, setConfirmed] = useState(false);
+  const [hasHandledPreselection, setHasHandledPreselection] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const { bookAppointment, loading, error } = useAppointments();
+
+  const preselectedServiceId = useMemo(() => {
+    const rawServiceId = searchParams.get('serviceId');
+    if (!rawServiceId) {
+      return undefined;
+    }
+
+    const parsedServiceId = Number.parseInt(rawServiceId, 10);
+    if (Number.isNaN(parsedServiceId) || parsedServiceId <= 0) {
+      return undefined;
+    }
+
+    return parsedServiceId;
+  }, [searchParams]);
+
+  const pendingPreselectedServiceId = hasHandledPreselection
+    ? undefined
+    : preselectedServiceId;
 
   const handleNext = () => setActiveStep((prev) => prev + 1);
   const handleBack = () => setActiveStep((prev) => prev - 1);
@@ -48,7 +69,19 @@ const BookingPageContainer: React.FC = () => {
       });
       setConfirmed(true);
     } catch {
-      // error is handled by useAppointments hook
+    }
+  };
+
+  const handlePreselectedServiceResolved = (service: Service | null) => {
+    if (hasHandledPreselection) {
+      return;
+    }
+
+    setHasHandledPreselection(true);
+
+    if (service) {
+      setSelectedService(service);
+      setActiveStep(1);
     }
   };
 
@@ -71,6 +104,7 @@ const BookingPageContainer: React.FC = () => {
     <BookingPageView
       activeStep={activeStep}
       selectedService={selectedService}
+      preselectedServiceId={pendingPreselectedServiceId}
       selectedBarber={selectedBarber}
       selectedDate={selectedDate}
       selectedSlot={selectedSlot}
@@ -80,6 +114,7 @@ const BookingPageContainer: React.FC = () => {
       error={error}
       canGoNext={canGoNext()}
       onServiceSelect={setSelectedService}
+      onPreselectedServiceResolved={handlePreselectedServiceResolved}
       onBarberSelect={setSelectedBarber}
       onDateChange={handleDateChange}
       onSlotSelect={setSelectedSlot}

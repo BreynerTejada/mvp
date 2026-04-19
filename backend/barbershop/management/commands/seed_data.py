@@ -14,9 +14,27 @@ class Command(BaseCommand):
             return
 
         services = [
-            Service(name='Corte Básico', price=20000, duration_minutes=20),
-            Service(name='Corte & Barba', price=28000, duration_minutes=60),
-            Service(name='Diseño de Barba', price=15000, duration_minutes=20),
+            Service(
+                name='Corte Básico',
+                description='Diseñado para resaltar un estilo natural. Un servicio preciso, limpio y profesional.',
+                popularity_badge='',
+                price=20000,
+                duration_minutes=20,
+            ),
+            Service(
+                name='Corte & Barba',
+                description='Corte a tu medida y barba perfectamente esculpida. Combinamos detalle y estilo para un look elegante.',
+                popularity_badge='POPULAR',
+                price=28000,
+                duration_minutes=60,
+            ),
+            Service(
+                name='Diseño de Barba',
+                description='Perfilado y diseño de barba con enfoque en simetría y elegancia. Un acabado limpio para complementar tu look.',
+                popularity_badge='',
+                price=15000,
+                duration_minutes=20,
+            ),
         ]
         Service.objects.bulk_create(services)
         self.stdout.write(self.style.SUCCESS(f'✓ {len(services)} servicios creados'))

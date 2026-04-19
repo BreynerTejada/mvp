@@ -8,7 +8,12 @@ export const heroSectionSx: SxProps<Theme> = {
   justifyContent: 'center',
   textAlign: 'center',
   overflow: 'hidden',
-  background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1510 50%, #0d0d0d 100%)',
+  backgroundColor: '#0d0d0d',
+  backgroundImage:
+    "linear-gradient(100deg, rgba(7,7,7,0.82) 0%, rgba(7,7,7,0.68) 44%, rgba(7,7,7,0.8) 100%), url('/images/home-hero.webp')",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -17,7 +22,7 @@ export const heroSectionSx: SxProps<Theme> = {
     right: 0,
     bottom: 0,
     background:
-      'radial-gradient(ellipse at center, rgba(196,163,90,0.06) 0%, transparent 70%)',
+      'linear-gradient(180deg, rgba(13,13,13,0.18) 0%, rgba(13,13,13,0.84) 100%)',
     pointerEvents: 'none',
   },
 };
@@ -113,7 +118,7 @@ export const featureCardSx: SxProps<Theme> = {
 export const ctaSectionSx: SxProps<Theme> = {
   py: 8,
   textAlign: 'center',
-  background: 'linear-gradient(135deg, #1a1510 0%, #0d0d0d 100%)',
+  background: '#0d0d0d',
   borderTop: '1px solid rgba(196, 163, 90, 0.1)',
 };
 

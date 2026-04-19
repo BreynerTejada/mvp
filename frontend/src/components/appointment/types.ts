@@ -10,6 +10,8 @@ export interface ClientData {
 export interface ServiceStepContainerProps {
   selectedService: Service | null;
   onServiceSelect: (service: Service) => void;
+  preselectedServiceId?: number;
+  onPreselectedServiceResolved?: (service: Service | null) => void;
 }
 
 export interface ServiceStepViewProps {

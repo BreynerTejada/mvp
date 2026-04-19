@@ -78,7 +78,7 @@ const NavbarView: React.FC<NavbarViewProps> = ({
             )}
 
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               onClick={() => handleNavClick('/agendar')}
               sx={styles.agendaButton}
