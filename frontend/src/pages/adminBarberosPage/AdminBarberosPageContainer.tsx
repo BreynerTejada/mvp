@@ -11,6 +11,7 @@ const buildEmptyForm = (): BarberFormData => ({
   phone: '',
   email: '',
   specialty: '',
+  password: '',
 });
 
 const AdminBarberosPageContainer: React.FC = () => {
@@ -22,6 +23,7 @@ const AdminBarberosPageContainer: React.FC = () => {
   const [formData, setFormData] = useState<BarberFormData>(buildEmptyForm());
   const [formError, setFormError] = useState<string | null>(null);
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const loadBarbers = useCallback(async () => {
     try {
@@ -42,6 +44,7 @@ const AdminBarberosPageContainer: React.FC = () => {
   const handleOpenCreate = () => {
     setFormData(buildEmptyForm());
     setFormError(null);
+    setShowPassword(false);
     setModalOpen(true);
   };
 
@@ -89,9 +92,11 @@ const AdminBarberosPageContainer: React.FC = () => {
       formData={formData}
       formError={formError}
       formSubmitting={formSubmitting}
+      showPassword={showPassword}
       onOpenCreate={handleOpenCreate}
       onCloseModal={() => setModalOpen(false)}
       onFormChange={handleFormChange}
+      onToggleShowPassword={() => setShowPassword((prev) => !prev)}
       onSubmit={handleSubmit}
       onDelete={handleDelete}
       onClearError={() => setErrorMessage(null)}

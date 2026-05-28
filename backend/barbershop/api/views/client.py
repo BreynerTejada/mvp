@@ -18,21 +18,20 @@ class ClientViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         data = serializer.validated_data
-        base_username = (
-            data.get('email', '').split('@')[0]
-            if data.get('email')
-            else f"cliente_{data['phone']}"
-        )[:30]
+        base_username = data['phone'][:30]
         username = base_username
         counter = 1
         while User.objects.filter(username=username).exists():
             username = f"{base_username}_{counter}"
             counter += 1
 
+        provided_password = data.pop('password', '').strip()
+        password = provided_password if provided_password else data['phone']
+
         user = User.objects.create_user(
             username=username,
             email=data.get('email', ''),
-            password='cliente',
+            password=password,
             first_name=data['first_name'],
             last_name=data['last_name'],
         )

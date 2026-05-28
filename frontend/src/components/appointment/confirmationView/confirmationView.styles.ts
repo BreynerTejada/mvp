@@ -28,3 +28,10 @@ export const headingSx: SxProps<Theme> = {
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
 };
+
+export const credentialsSx: SxProps<Theme> = {
+  mb: 3,
+  textAlign: 'left',
+  width: '100%',
+  maxWidth: 400,
+};

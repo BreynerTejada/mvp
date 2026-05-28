@@ -1,16 +1,49 @@
 import React from 'react';
-import { Box, Alert, CircularProgress, Typography, Chip } from '@mui/material';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Alert,
+  CircularProgress,
+  Typography,
+  Chip,
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import PageHeader from '../../components/styled/PageHeader';
+import GoldButton from '../../components/styled/GoldButton';
 import DataTable, { Column } from '../../components/styled/DataTable';
+import RowActions from '../../components/styled/RowActions';
 import { Service } from '../../api/types';
 import { AdminServiciosPageViewProps } from './types';
-import { namePrimarySx, descriptionSx, priceSx } from './adminServiciosPage.styles';
+import {
+  namePrimarySx,
+  descriptionSx,
+  priceSx,
+  dialogPaperSx,
+  dialogTitleSx,
+  dialogContentSx,
+  fieldRowSx,
+  dialogActionsSx,
+} from './adminServiciosPage.styles';
 
 const AdminServiciosPageView: React.FC<AdminServiciosPageViewProps> = ({
   services,
   loading,
   errorMessage,
+  modalOpen,
+  formData,
+  formError,
+  formSubmitting,
   onClearError,
+  onOpenCreate,
+  onCloseModal,
+  onFormChange,
+  onSubmit,
+  onDelete,
 }) => {
   const columns: Column<Service>[] = [
     {
@@ -55,6 +88,12 @@ const AdminServiciosPageView: React.FC<AdminServiciosPageViewProps> = ({
         </Typography>
       ),
     },
+    {
+      key: 'actions',
+      header: 'Acciones',
+      align: 'right',
+      render: (row) => <RowActions onDelete={() => onDelete(row)} />,
+    },
   ];
 
   return (
@@ -62,6 +101,11 @@ const AdminServiciosPageView: React.FC<AdminServiciosPageViewProps> = ({
       <PageHeader
         title="Servicios"
         subtitle="Catálogo de servicios disponibles para reservar."
+        action={
+          <GoldButton startIcon={<AddIcon />} onClick={onOpenCreate}>
+            Crear
+          </GoldButton>
+        }
       />
 
       {errorMessage && (
@@ -82,6 +126,56 @@ const AdminServiciosPageView: React.FC<AdminServiciosPageViewProps> = ({
           emptyMessage="No hay servicios."
         />
       )}
+
+      <Dialog open={modalOpen} onClose={onCloseModal} PaperProps={{ sx: dialogPaperSx }}>
+        <DialogTitle sx={dialogTitleSx}>Crear servicio</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
+          {formError && <Alert severity="error">{formError}</Alert>}
+          <TextField
+            label="Nombre"
+            value={formData.name}
+            onChange={(e) => onFormChange('name', e.target.value)}
+            required
+          />
+          <TextField
+            label="Descripción"
+            value={formData.description}
+            onChange={(e) => onFormChange('description', e.target.value)}
+            multiline
+            rows={2}
+          />
+          <Box sx={fieldRowSx}>
+            <TextField
+              label="Precio (COP)"
+              type="number"
+              value={formData.price}
+              onChange={(e) => onFormChange('price', e.target.value)}
+              required
+            />
+            <TextField
+              label="Duración (min)"
+              type="number"
+              value={formData.duration_minutes}
+              onChange={(e) => onFormChange('duration_minutes', e.target.value)}
+              required
+            />
+          </Box>
+          <TextField
+            label="Badge de popularidad (opcional)"
+            value={formData.popularity_badge}
+            onChange={(e) => onFormChange('popularity_badge', e.target.value)}
+            placeholder="Ej: Más popular, Nuevo…"
+          />
+        </DialogContent>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={onCloseModal} disabled={formSubmitting}>
+            Cancelar
+          </Button>
+          <GoldButton onClick={onSubmit} disabled={formSubmitting}>
+            {formSubmitting ? 'Guardando…' : 'Guardar'}
+          </GoldButton>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -53,6 +53,11 @@ export const getBarber = (id: number) =>
 export const getBarberSchedules = (id: number) =>
   apiClient.get<BarberSchedule[]>(`/barbers/${id}/schedules/`);
 
+export const setBarberSchedules = (
+  id: number,
+  schedules: Array<{ day_of_week: number; start_time: string; end_time: string }>,
+) => apiClient.put<BarberSchedule[]>(`/barbers/${id}/schedules/`, schedules);
+
 export const getBarberAvailability = (id: number, date: string, serviceId: number) =>
   apiClient.get<{ available_slots: Slot[] }>(`/barbers/${id}/availability/`, {
     params: { date, service_id: serviceId },
@@ -82,7 +87,13 @@ export const updateAppointmentStatus = (id: number, status: string) =>
 export const getClients = () =>
   apiClient.get<Client[]>('/clients/');
 
-export const createClient = (data: Partial<Client>) =>
+export const createClient = (data: Record<string, string>) =>
   apiClient.post<Client>('/clients/', data);
+
+export const deleteClient = (id: number) =>
+  apiClient.delete(`/clients/${id}/`);
+
+export const deleteService = (id: number) =>
+  apiClient.delete(`/services/${id}/`);
 
 export default apiClient;

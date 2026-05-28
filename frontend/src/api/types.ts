@@ -68,6 +68,12 @@ export interface Appointment {
   notes: string;
   created_at: string;
   updated_at: string;
+  client_credentials?: ClientCredentials;
+}
+
+export interface ClientCredentials {
+  username: string;
+  temp_password: string;
 }
 
 export interface AppointmentCreatePayload {
@@ -75,6 +81,7 @@ export interface AppointmentCreatePayload {
   client_last_name: string;
   client_phone: string;
   client_email?: string;
+  client_password?: string;
   barber_id: number;
   service_id: number;
   date: string;

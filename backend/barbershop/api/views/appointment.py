@@ -68,7 +68,7 @@ class AppointmentViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        client = self._get_or_create_client(data)
+        client, is_new, credentials = self._get_or_create_client(data)
 
         barber = Barber.objects.get(id=data['barber_id'])
         service = Service.objects.get(id=data['service_id'])
@@ -86,10 +86,11 @@ class AppointmentViewSet(viewsets.ViewSet):
         except BarberShopException as e:
             return Response({'error': str(e)}, status=drf_status.HTTP_400_BAD_REQUEST)
 
-        return Response(
-            AppointmentReadSerializer(appointment).data,
-            status=drf_status.HTTP_201_CREATED
-        )
+        response_data = dict(AppointmentReadSerializer(appointment).data)
+        if credentials:
+            response_data['client_credentials'] = credentials
+
+        return Response(response_data, status=drf_status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
         appointment = get_object_or_404(Appointment, pk=pk)
@@ -185,19 +186,23 @@ class AppointmentViewSet(viewsets.ViewSet):
     def _get_or_create_client(data):
         client = Client.objects.filter(phone=data['client_phone']).first()
         if client is not None:
-            return client
+            return client, False, None
 
-        base_username = f"cliente_{data['client_phone']}"[:30]
+        base_username = data['client_phone'][:30]
         username = base_username
         counter = 1
         while User.objects.filter(username=username).exists():
             username = f"{base_username}_{counter}"
             counter += 1
 
+        provided_password = data.get('client_password', '').strip()
+        temp_password = data['client_phone'] if not provided_password else None
+        password = provided_password if provided_password else temp_password
+
         user = User.objects.create_user(
             username=username,
             email=data.get('client_email', ''),
-            password='cliente',
+            password=password,
             first_name=data['client_first_name'],
             last_name=data['client_last_name'],
         )
@@ -209,4 +214,6 @@ class AppointmentViewSet(viewsets.ViewSet):
             phone=data['client_phone'],
             email=data.get('client_email', ''),
         )
-        return client
+
+        credentials = {'username': username, 'temp_password': temp_password} if temp_password else None
+        return client, True, credentials

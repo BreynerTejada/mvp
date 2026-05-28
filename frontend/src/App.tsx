@@ -15,6 +15,7 @@ import AdminBarberosPageContainer from './pages/adminBarberosPage/AdminBarberosP
 import AdminClientesPageContainer from './pages/adminClientesPage/AdminClientesPageContainer';
 import AdminServiciosPageContainer from './pages/adminServiciosPage/AdminServiciosPageContainer';
 import BarberHorarioPageContainer from './pages/barberHorarioPage/BarberHorarioPageContainer';
+import BarberDisponibilidadPageContainer from './pages/barberDisponibilidadPage/BarberDisponibilidadPageContainer';
 import ClienteHistorialPageContainer from './pages/clienteHistorialPage/ClienteHistorialPageContainer';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRouteContainer from './components/layout/ProtectedRouteContainer';
@@ -78,6 +79,7 @@ function App() {
         <Route element={<ProtectedRouteContainer allowedRoles={['barber']} />}>
           <Route element={<BarberLayout />}>
             <Route path="/barbero/horario" element={<BarberHorarioPageContainer />} />
+            <Route path="/barbero/disponibilidad" element={<BarberDisponibilidadPageContainer />} />
           </Route>
         </Route>
 

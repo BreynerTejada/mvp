@@ -6,6 +6,7 @@ export interface BarberFormData {
   phone: string;
   email: string;
   specialty: string;
+  password: string;
 }
 
 export interface AdminBarberosPageViewProps {
@@ -16,9 +17,11 @@ export interface AdminBarberosPageViewProps {
   formData: BarberFormData;
   formError: string | null;
   formSubmitting: boolean;
+  showPassword: boolean;
   onOpenCreate: () => void;
   onCloseModal: () => void;
   onFormChange: (field: keyof BarberFormData, value: string) => void;
+  onToggleShowPassword: () => void;
   onSubmit: () => void;
   onDelete: (barber: BarberListItem) => void;
   onClearError: () => void;

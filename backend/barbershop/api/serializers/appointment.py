@@ -30,6 +30,7 @@ class AppointmentCreateSerializer(serializers.Serializer):
     client_last_name = serializers.CharField(max_length=100)
     client_phone = serializers.CharField(max_length=20)
     client_email = serializers.EmailField(required=False, allow_blank=True, default='')
+    client_password = serializers.CharField(required=False, allow_blank=True, default='', write_only=True)
     barber_id = serializers.IntegerField()
     service_id = serializers.IntegerField()
     date = serializers.DateField()

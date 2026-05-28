@@ -10,8 +10,12 @@ import {
   Alert,
   CircularProgress,
   Typography,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PageHeader from '../../components/styled/PageHeader';
 import GoldButton from '../../components/styled/GoldButton';
 import DataTable, { Column } from '../../components/styled/DataTable';
@@ -37,9 +41,11 @@ const AdminBarberosPageView: React.FC<AdminBarberosPageViewProps> = ({
   formData,
   formError,
   formSubmitting,
+  showPassword,
   onOpenCreate,
   onCloseModal,
   onFormChange,
+  onToggleShowPassword,
   onSubmit,
   onDelete,
   onClearError,
@@ -139,6 +145,22 @@ const AdminBarberosPageView: React.FC<AdminBarberosPageViewProps> = ({
             value={formData.specialty}
             onChange={(e) => onFormChange('specialty', e.target.value)}
             placeholder="Master Barber, Senior Stylist, Barber…"
+          />
+          <TextField
+            label="Contraseña"
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={(e) => onFormChange('password', e.target.value)}
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={onToggleShowPassword} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </DialogContent>
         <DialogActions sx={dialogActionsSx}>
