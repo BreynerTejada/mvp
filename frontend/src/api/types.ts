@@ -68,6 +68,12 @@ export interface Appointment {
   notes: string;
   created_at: string;
   updated_at: string;
+  client_credentials?: ClientCredentials;
+}
+
+export interface ClientCredentials {
+  username: string;
+  temp_password: string;
 }
 
 export interface AppointmentCreatePayload {
@@ -75,6 +81,7 @@ export interface AppointmentCreatePayload {
   client_last_name: string;
   client_phone: string;
   client_email?: string;
+  client_password?: string;
   barber_id: number;
   service_id: number;
   date: string;
@@ -93,10 +100,23 @@ export interface AuthResponse {
   refresh: string;
 }
 
+export type UserRole = 'admin' | 'barber' | 'client' | 'guest';
+
 export interface UserMe {
   id: number;
   username: string;
   email: string;
+  full_name: string;
+  role: UserRole;
   is_staff: boolean;
   barber_id: number | null;
+  client_id: number | null;
+}
+
+export interface AppointmentUpdatePayload {
+  barber_id?: number;
+  service_id?: number;
+  date?: string;
+  start_time?: string;
+  notes?: string;
 }

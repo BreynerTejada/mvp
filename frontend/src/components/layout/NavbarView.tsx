@@ -12,6 +12,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { UserMe } from '../../api/types';
 import * as styles from './Navbar.styles';
 
 export interface NavbarLink {
@@ -24,8 +25,9 @@ interface NavbarViewProps {
   isMobile: boolean;
   drawerOpen: boolean;
   setDrawerOpen: (open: boolean) => void;
-  user: any;
-  isAdmin: boolean;
+  user: UserMe | null | undefined;
+  portalPath: string | null;
+  portalLabel: string | null;
   handleNavClick: (path: string) => void;
   handleLogout: () => void;
 }
@@ -36,14 +38,14 @@ const NavbarView: React.FC<NavbarViewProps> = ({
   drawerOpen,
   setDrawerOpen,
   user,
-  isAdmin,
+  portalPath,
+  portalLabel,
   handleNavClick,
   handleLogout,
 }) => {
   return (
     <AppBar position="sticky" id="navbar">
       <Toolbar sx={styles.toolbar}>
-        {/* Logo */}
         <Typography
           variant="h6"
           onClick={() => handleNavClick('/')}
@@ -52,7 +54,6 @@ const NavbarView: React.FC<NavbarViewProps> = ({
           BARBER SHOP
         </Typography>
 
-        {/* Desktop Menu */}
         {!isMobile && (
           <Box sx={styles.navLinksContainer}>
             {navLinks.map((link) => (
@@ -65,15 +66,12 @@ const NavbarView: React.FC<NavbarViewProps> = ({
               </Button>
             ))}
 
-            {user && isAdmin && (
-              <Button onClick={() => handleNavClick('/admin/barberos')} sx={styles.highlightNavButton}>
-                PANEL ADMIN
-              </Button>
-            )}
-
-            {user && (
-              <Button onClick={() => handleNavClick('/agenda')} sx={styles.highlightNavButton}>
-                MI AGENDA
+            {user && portalPath && portalLabel && (
+              <Button
+                onClick={() => handleNavClick(portalPath)}
+                sx={styles.highlightNavButton}
+              >
+                {portalLabel}
               </Button>
             )}
 
@@ -98,7 +96,6 @@ const NavbarView: React.FC<NavbarViewProps> = ({
           </Box>
         )}
 
-        {/* Mobile Menu Toggle */}
         {isMobile && (
           <IconButton
             color="inherit"
@@ -109,14 +106,11 @@ const NavbarView: React.FC<NavbarViewProps> = ({
           </IconButton>
         )}
 
-        {/* Mobile Drawer */}
         <Drawer
           anchor="right"
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          PaperProps={{
-            sx: styles.drawerPaper,
-          }}
+          PaperProps={{ sx: styles.drawerPaper }}
         >
           <List>
             {navLinks.map((link) => (
@@ -127,26 +121,18 @@ const NavbarView: React.FC<NavbarViewProps> = ({
               >
                 <ListItemText
                   primary={link.label}
-                  primaryTypographyProps={{
-                    sx: styles.drawerListItemText,
-                  }}
+                  primaryTypographyProps={{ sx: styles.drawerListItemText }}
                 />
               </ListItem>
             ))}
 
-            {user && isAdmin && (
-              <ListItem onClick={() => handleNavClick('/admin/barberos')} sx={{ cursor: 'pointer' }}>
+            {user && portalPath && portalLabel && (
+              <ListItem
+                onClick={() => handleNavClick(portalPath)}
+                sx={{ cursor: 'pointer' }}
+              >
                 <ListItemText
-                  primary="PANEL ADMIN"
-                  primaryTypographyProps={{ sx: styles.drawerHighlightText }}
-                />
-              </ListItem>
-            )}
-
-            {user && (
-              <ListItem onClick={() => handleNavClick('/agenda')} sx={{ cursor: 'pointer' }}>
-                <ListItemText
-                  primary="MI AGENDA"
+                  primary={portalLabel}
                   primaryTypographyProps={{ sx: styles.drawerHighlightText }}
                 />
               </ListItem>
@@ -163,7 +149,10 @@ const NavbarView: React.FC<NavbarViewProps> = ({
 
             <ListItem sx={styles.drawerFooterItem}>
               {!user ? (
-                <Button onClick={() => handleNavClick('/login')} sx={{ color: 'text.secondary' }}>
+                <Button
+                  onClick={() => handleNavClick('/login')}
+                  sx={{ color: 'text.secondary' }}
+                >
                   Iniciar sesion
                 </Button>
               ) : (

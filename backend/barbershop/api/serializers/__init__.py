@@ -9,6 +9,7 @@ from barbershop.api.serializers.client import ClientSerializer
 from barbershop.api.serializers.appointment import (
     AppointmentReadSerializer,
     AppointmentCreateSerializer,
+    AppointmentUpdateSerializer,
     AppointmentStatusSerializer,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     'ClientSerializer',
     'AppointmentReadSerializer',
     'AppointmentCreateSerializer',
+    'AppointmentUpdateSerializer',
     'AppointmentStatusSerializer',
 ]

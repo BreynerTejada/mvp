@@ -27,24 +27,29 @@ class BarberViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         data = serializer.validated_data
-        email = data.get('email', '')
-        username = email.split('@')[0] if email else data['first_name'].lower()
-        base_username = username
+        base_username = data['phone'][:30]
+        username = base_username
         counter = 1
         while User.objects.filter(username=username).exists():
-            username = f"{base_username}{counter}"
+            username = f"{base_username}_{counter}"
             counter += 1
 
-        password = User.objects.make_random_password(length=16)
+        password = data.pop('password')
+        email = data.get('email', '')
         user = User.objects.create_user(username=username, email=email, password=password)
         serializer.save(user=user)
+
+    def get_permissions(self):
+        if self.action == 'schedules' and self.request.method == 'PUT':
+            return [IsAuthenticated()]
+        return [IsAdminOrReadOnly()]
 
     def get_serializer_class(self):
         if self.action == 'list':
             return BarberListSerializer
         return BarberSerializer
 
-    @action(detail=True, methods=['get', 'post'], url_path='schedules')
+    @action(detail=True, methods=['get', 'post', 'put'], url_path='schedules')
     def schedules(self, request, pk=None):
         barber = self.get_object()
 
@@ -53,10 +58,31 @@ class BarberViewSet(viewsets.ModelViewSet):
             serializer = BarberScheduleSerializer(schedules, many=True)
             return Response(serializer.data)
 
-        serializer = BarberScheduleSerializer(data={**request.data, 'barber': barber.pk})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if request.method == 'POST':
+            serializer = BarberScheduleSerializer(data={**request.data, 'barber': barber.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        is_own_barber = (
+            hasattr(request.user, 'barber_profile')
+            and request.user.barber_profile is not None
+            and request.user.barber_profile.id == barber.id
+        )
+        if not request.user.is_staff and not is_own_barber:
+            return Response(
+                {'error': 'Sin permiso para modificar este horario.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        BarberSchedule.objects.filter(barber=barber).delete()
+        created = []
+        for item in request.data:
+            serializer = BarberScheduleSerializer(data={**item, 'barber': barber.pk})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            created.append(serializer.data)
+        return Response(created)
 
     @action(detail=True, methods=['get'], url_path='availability')
     def availability(self, request, pk=None):

@@ -1,10 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 from barbershop.domain.validators import phone_validator
 
 
 class Client(models.Model):
 
+    user = models.OneToOneField(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='client_profile'
+    )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone = models.CharField(

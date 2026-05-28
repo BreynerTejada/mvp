@@ -17,13 +17,14 @@ class BarberSerializer(serializers.ModelSerializer):
 
     full_name = serializers.CharField(read_only=True)
     schedules = BarberScheduleSerializer(many=True, read_only=True)
+    password = serializers.CharField(write_only=True, required=True, min_length=6)
 
     class Meta:
         model = Barber
         fields = [
             'id', 'first_name', 'last_name', 'full_name',
             'phone', 'email', 'specialty', 'is_active',
-            'schedules', 'created_at'
+            'schedules', 'created_at', 'password'
         ]
         read_only_fields = ['id', 'created_at', 'full_name']
 
