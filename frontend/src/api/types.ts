@@ -93,10 +93,23 @@ export interface AuthResponse {
   refresh: string;
 }
 
+export type UserRole = 'admin' | 'barber' | 'client' | 'guest';
+
 export interface UserMe {
   id: number;
   username: string;
   email: string;
+  full_name: string;
+  role: UserRole;
   is_staff: boolean;
   barber_id: number | null;
+  client_id: number | null;
+}
+
+export interface AppointmentUpdatePayload {
+  barber_id?: number;
+  service_id?: number;
+  date?: string;
+  start_time?: string;
+  notes?: string;
 }

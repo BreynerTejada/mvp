@@ -60,5 +60,8 @@ class AppointmentEventManager:
 
 
 def register_default_observers():
+    from barbershop.application.notifications import WhatsAppObserver
+
     manager = AppointmentEventManager()
     manager.subscribe(LoggingObserver())
+    manager.subscribe(WhatsAppObserver())

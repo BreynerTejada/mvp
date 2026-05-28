@@ -9,7 +9,9 @@ import {
   Slot,
   Appointment,
   AppointmentCreatePayload,
+  AppointmentUpdatePayload,
   AgendaResponse,
+  Client,
 } from './types';
 
 const apiClient = axios.create({
@@ -65,7 +67,22 @@ export const createAppointment = (data: AppointmentCreatePayload) =>
 export const getAppointments = (params?: Record<string, string | number>) =>
   apiClient.get<Appointment[]>('/appointments/', { params });
 
+export const getMyAppointments = () =>
+  apiClient.get<Appointment[]>('/appointments/mine/');
+
+export const updateAppointment = (id: number, data: AppointmentUpdatePayload) =>
+  apiClient.patch<Appointment>(`/appointments/${id}/`, data);
+
+export const deleteAppointment = (id: number) =>
+  apiClient.delete(`/appointments/${id}/`);
+
 export const updateAppointmentStatus = (id: number, status: string) =>
   apiClient.patch<Appointment>(`/appointments/${id}/status/`, { status });
+
+export const getClients = () =>
+  apiClient.get<Client[]>('/clients/');
+
+export const createClient = (data: Partial<Client>) =>
+  apiClient.post<Client>('/clients/', data);
 
 export default apiClient;

@@ -2,20 +2,25 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
 import * as styles from './ProtectedRoute.styles';
-import { UserMe } from '../../api/types';
+import { UserMe, UserRole } from '../../api/types';
 
 interface ProtectedRouteViewProps {
   loading: boolean;
   user: UserMe | null;
-  isAdmin: boolean;
-  adminOnly: boolean;
+  allowedRoles?: UserRole[];
 }
+
+const DEFAULT_ROUTE_BY_ROLE: Record<UserRole, string> = {
+  admin: '/admin/citas',
+  barber: '/barbero/horario',
+  client: '/cliente/historial',
+  guest: '/login',
+};
 
 const ProtectedRouteView: React.FC<ProtectedRouteViewProps> = ({
   loading,
   user,
-  isAdmin,
-  adminOnly,
+  allowedRoles,
 }) => {
   if (loading) {
     return (
@@ -29,8 +34,9 @@ const ProtectedRouteView: React.FC<ProtectedRouteViewProps> = ({
     return <Navigate to="/login" replace />;
   }
 
-  if (adminOnly && !isAdmin) {
-    return <Navigate to="/agenda" replace />;
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    const fallback = DEFAULT_ROUTE_BY_ROLE[user.role] || '/';
+    return <Navigate to={fallback} replace />;
   }
 
   return <Outlet />;
