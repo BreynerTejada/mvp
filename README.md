@@ -7,14 +7,12 @@ Plataforma full-stack para la operación integral de una barbería, con tres por
 
 ## Tabla de contenidos
 - [Descripción general](#descripción-general)
-- [Integrantes](#integrantes)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
 - [Funcionalidades implementadas](#funcionalidades-implementadas)
 - [Requisitos de instalación](#requisitos-de-instalación)
 - [Pasos para ejecutar el proyecto](#pasos-para-ejecutar-el-proyecto)
 - [Credenciales de prueba](#credenciales-de-prueba)
 - [Estructura del repositorio](#estructura-del-repositorio)
-- [Diagramas](#diagramas)
 - [Documentación adicional](#documentación-adicional)
 - [Capturas](#capturas)
 
