@@ -1,8 +1,7 @@
 # BarberShop — MVP
 
-Plataforma full-stack para la operación integral de una barbería, con tres portales diferenciados (Administrador, Barbero, Cliente), motor de reservas con verificación de disponibilidad, y notificaciones por WhatsApp.
-
-> Proyecto académico desarrollado siguiendo principios SOLID y patrones de diseño GoF (Factory, State, Strategy, Observer, Facade, Singleton).
+Plataforma full-stack para la operación integral de una barbería, con tres portales diferenciados (Administrador, Barbero, Cliente), motor de reservas con verificación de disponibilidad
+> desarrollado siguiendo principios SOLID y patrones de diseño GoF (Factory, State, Strategy, Observer, Facade, Singleton).
 
 ---
 
@@ -27,17 +26,8 @@ BarberShop permite a un equipo de barberos:
 - Publicar su catálogo de servicios.
 - Recibir reservas online sin fricción (sin necesidad de registro previo).
 - Administrar el ciclo de vida de cada cita (pendiente → confirmada → completada / cancelada).
-- Comunicar automáticamente al cliente cambios relevantes vía WhatsApp.
-
+  
 La aplicación expone tres experiencias completas según el rol del usuario autenticado: **Admin**, **Barbero** y **Cliente**.
-
----
-
-## Integrantes
-
-- Breyner Tejada
-
-> Si trabajas en equipo, agrega aquí el resto de integrantes con su rol.
 
 ---
 
@@ -48,8 +38,7 @@ La aplicación expone tres experiencias completas según el rol del usuario aute
 | Frontend      | React 18 · TypeScript · Vite · MUI v5 · React Router 6 · Axios       |
 | Backend       | Django 4.2 · Django REST Framework · SimpleJWT                       |
 | Base de datos | PostgreSQL 15                                                        |
-| Infraestructura | Docker · Docker Compose · Nginx (frontend en producción)            |
-| Mensajería    | CallMeBot (WhatsApp HTTP API gratuita)                               |
+| Infraestructura | Docker · Docker Compose                                            |
 
 ---
 
@@ -75,11 +64,6 @@ La aplicación expone tres experiencias completas según el rol del usuario aute
 ### Portal Cliente (`/cliente/historial`)
 - Saludo personalizado + historial de visitas anteriores y citas confirmadas.
 
-### Notificaciones WhatsApp
-- Mensaje automático al crear una cita.
-- Mensaje automático al cambiar de estado.
-- Configurable vía `CALLMEBOT_API_KEY` (con fallback a logs si no hay clave).
-
 ### Calidad de código
 - Arquitectura en capas: `api` ↔ `application` ↔ `domain`.
 - 6 patrones GoF aplicados.
@@ -93,7 +77,6 @@ La aplicación expone tres experiencias completas según el rol del usuario aute
 
 - **Docker** ≥ 24 y **Docker Compose** v2.
 - Puertos libres: `3000` (frontend), `8001` (backend), `5433` (Postgres).
-- (Opcional) Una API key de [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) si quieres notificaciones reales.
 
 No necesitas instalar Python, Node ni Postgres localmente: todo corre en contenedores.
 
@@ -108,7 +91,6 @@ cd mvp
 
 # 2. (Opcional) personalizar variables de entorno
 cp .env.example .env
-# editar .env si deseas otra password o agregar CALLMEBOT_API_KEY
 
 # 3. Levantar todo el stack
 docker compose up --build
@@ -201,20 +183,6 @@ mvp/
 ```
 
 Cada componente del frontend sigue el patrón **Container / View / Styles** (ver `CLAUDE.md`).
-
----
-
-## Diagramas
-
-Disponibles en [`diagrams/`](./diagrams/) (formato PlantUML):
-
-- `c4_context.puml` — contexto del sistema.
-- `c4_containers.puml` — frontend, backend, base de datos.
-- `c4_components.puml` — capas internas del backend.
-- `activity_booking.puml` — flujo de reserva.
-- `activity_state.puml` — diagrama de estados de una cita.
-
-Para renderizar localmente puedes usar la extensión **PlantUML** de VS Code o `plantuml diagrams/*.puml`.
 
 ---
 
