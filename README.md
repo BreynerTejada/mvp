@@ -117,18 +117,22 @@ docker compose up --build
 
 ## Credenciales de prueba
 
-| Rol     | Usuario   | Contraseña |
-|---------|-----------|------------|
-| Admin   | `admin`   | `admin`    |
-| Barbero | `marcus`  | `barber`   |
-| Barbero | `david`   | `barber`   |
-| Barbero | `james`   | `barber`   |
-| Cliente | `michael` | `cliente`  |
-| Cliente | `jim`     | `cliente`  |
-| Cliente | `dwight`  | `cliente`  |
-| Cliente | `pam`     | `cliente`  |
-| Cliente | `ryan`    | `cliente`  |
-| Cliente | `andy`    | `cliente`  |
+Barberos y clientes inician sesión con su **número de teléfono**. El administrador ingresa con su **usuario** (`admin`).
+
+| Rol     | Usuario / Teléfono | Contraseña |
+|---------|--------------------|------------|
+| Admin   | `admin`            | `admin`    |
+| Barbero | `3001112222` (Marcus) | `barber` |
+| Barbero | `3002223333` (David)  | `barber` |
+| Barbero | `3003334444` (James)  | `barber` |
+| Cliente | `3104441111` (Michael) | `cliente` |
+| Cliente | `3104441112` (Jim)     | `cliente` |
+| Cliente | `3104441113` (Dwight)  | `cliente` |
+| Cliente | `3104441114` (Pam)     | `cliente` |
+| Cliente | `3104441115` (Ryan)    | `cliente` |
+| Cliente | `3104441116` (Andy)    | `cliente` |
+
+> Los clientes y barberos creados desde el panel admin (o al reservar una cita) usan su teléfono como contraseña por defecto, salvo que se defina una contraseña explícita en el formulario.
 
 > Todos los datos seed se crean en `backend/barbershop/management/commands/seed_data.py`.
 

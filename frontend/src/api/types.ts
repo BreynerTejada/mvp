@@ -72,7 +72,7 @@ export interface Appointment {
 }
 
 export interface ClientCredentials {
-  username: string;
+  phone: string;
   temp_password: string;
 }
 

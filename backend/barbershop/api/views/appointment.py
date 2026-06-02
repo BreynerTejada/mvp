@@ -186,8 +186,25 @@ class AppointmentViewSet(viewsets.ViewSet):
     def _get_or_create_client(data):
         client = Client.objects.filter(phone=data['client_phone']).first()
         if client is not None:
-            return client, False, None
+            if client.user is not None:
+                return client, False, None
+            user, credentials = AppointmentViewSet._create_login_for_phone(data)
+            client.user = user
+            client.save(update_fields=['user'])
+            return client, False, credentials
 
+        user, credentials = AppointmentViewSet._create_login_for_phone(data)
+        client = Client.objects.create(
+            user=user,
+            first_name=data['client_first_name'],
+            last_name=data['client_last_name'],
+            phone=data['client_phone'],
+            email=data.get('client_email', ''),
+        )
+        return client, True, credentials
+
+    @staticmethod
+    def _create_login_for_phone(data):
         base_username = data['client_phone'][:30]
         username = base_username
         counter = 1
@@ -207,13 +224,8 @@ class AppointmentViewSet(viewsets.ViewSet):
             last_name=data['client_last_name'],
         )
 
-        client = Client.objects.create(
-            user=user,
-            first_name=data['client_first_name'],
-            last_name=data['client_last_name'],
-            phone=data['client_phone'],
-            email=data.get('client_email', ''),
+        credentials = (
+            {'phone': data['client_phone'], 'temp_password': temp_password}
+            if temp_password else None
         )
-
-        credentials = {'username': username, 'temp_password': temp_password} if temp_password else None
-        return client, True, credentials
+        return user, credentials

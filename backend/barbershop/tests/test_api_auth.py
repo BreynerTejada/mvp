@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth.models import User
-from barbershop.domain.models import Barber
+from barbershop.domain.models import Barber, Client
 
 class APIAuthTest(TestCase):
 
@@ -56,7 +56,8 @@ class APIAuthTest(TestCase):
             'first_name': 'New',
             'last_name': 'Barber',
             'phone': '1111111',
-            'email': 'new@b.com'
+            'email': 'new@b.com',
+            'password': 'secret123'
         }
         
         # Unauth should fail
@@ -71,6 +72,40 @@ class APIAuthTest(TestCase):
         resp3 = self.client_admin.post(url, data)
         self.assertEqual(resp3.status_code, status.HTTP_201_CREATED)
         self.assertTrue(User.objects.filter(email='new@b.com').exists())
+
+    def test_login_by_phone_resolves_client_even_if_username_differs(self):
+        user = User.objects.create_user('legacy_name_1', 'c@c.com', 'secret')
+        Client.objects.create(
+            user=user, first_name='Cli', last_name='Ente', phone='3009998888'
+        )
+        url = reverse('token_obtain_pair')
+        resp = self.client_unauth.post(
+            url, {'username': '3009998888', 'password': 'secret'}, format='json'
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('access', resp.data)
+
+    def test_login_by_phone_resolves_barber(self):
+        url = reverse('token_obtain_pair')
+        resp = self.client_unauth.post(
+            url, {'username': self.barber1.phone, 'password': 'pass'}, format='json'
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('access', resp.data)
+
+    def test_login_admin_by_username_still_works(self):
+        url = reverse('token_obtain_pair')
+        resp = self.client_unauth.post(
+            url, {'username': 'admin', 'password': 'admin_pass'}, format='json'
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_login_wrong_password_fails(self):
+        url = reverse('token_obtain_pair')
+        resp = self.client_unauth.post(
+            url, {'username': self.barber1.phone, 'password': 'wrong'}, format='json'
+        )
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_agenda_access_control(self):
         url_b1 = reverse('barber-agenda', args=[self.barber1.id])

@@ -27,6 +27,7 @@ const BookingPageView: React.FC<BookingPageViewProps> = ({
   selectedSlot,
   clientData,
   confirmed,
+  credentials,
   loading,
   error,
   canGoNext,
@@ -44,7 +45,7 @@ const BookingPageView: React.FC<BookingPageViewProps> = ({
   if (confirmed) {
     return (
       <Box sx={confirmationWrapperSx}>
-        <ConfirmationView onBookAnother={onBookAnother} />
+        <ConfirmationView onBookAnother={onBookAnother} credentials={credentials} />
       </Box>
     );
   }

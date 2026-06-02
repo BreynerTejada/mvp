@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAppointments } from '../../hooks/useAppointments';
-import { Service, BarberListItem, Slot } from '../../api/types';
+import { Service, BarberListItem, Slot, ClientCredentials } from '../../api/types';
 import { ClientData } from '../../components/appointment/types';
 import BookingPageView from './BookingPageView';
 
@@ -18,6 +18,7 @@ const BookingPageContainer: React.FC = () => {
     email: '',
   });
   const [confirmed, setConfirmed] = useState(false);
+  const [credentials, setCredentials] = useState<ClientCredentials | null>(null);
   const [hasHandledPreselection, setHasHandledPreselection] = useState(false);
   const [searchParams] = useSearchParams();
 
@@ -57,7 +58,7 @@ const BookingPageContainer: React.FC = () => {
   const handleConfirm = async () => {
     if (!selectedBarber || !selectedService || !selectedSlot) return;
     try {
-      await bookAppointment({
+      const appointment = await bookAppointment({
         client_first_name: clientData.firstName,
         client_last_name: clientData.lastName,
         client_phone: clientData.phone,
@@ -67,6 +68,7 @@ const BookingPageContainer: React.FC = () => {
         date: selectedDate,
         start_time: selectedSlot.start_time,
       });
+      setCredentials(appointment.client_credentials ?? null);
       setConfirmed(true);
     } catch {
     }
@@ -93,6 +95,7 @@ const BookingPageContainer: React.FC = () => {
     setSelectedSlot(null);
     setClientData({ firstName: '', lastName: '', phone: '', email: '' });
     setConfirmed(false);
+    setCredentials(null);
   };
 
   const handleDateChange = (date: string) => {
@@ -110,6 +113,7 @@ const BookingPageContainer: React.FC = () => {
       selectedSlot={selectedSlot}
       clientData={clientData}
       confirmed={confirmed}
+      credentials={credentials}
       loading={loading}
       error={error}
       canGoNext={canGoNext()}

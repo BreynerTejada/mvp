@@ -1,4 +1,4 @@
-import { Service, BarberListItem, Slot } from '../../api/types';
+import { Service, BarberListItem, Slot, ClientCredentials } from '../../api/types';
 
 export interface ClientData {
   firstName: string;
@@ -74,4 +74,5 @@ export interface DetailsStepViewProps {
 
 export interface ConfirmationViewProps {
   onBookAnother: () => void;
+  credentials?: ClientCredentials | null;
 }

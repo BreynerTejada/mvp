@@ -100,7 +100,7 @@ class Command(BaseCommand):
         ]
         barbers = []
         for data in barbers_data:
-            username = data['email'].split('@')[0]
+            username = data['phone']
             user = User.objects.create_user(
                 username=username,
                 email=data['email'],
@@ -141,7 +141,7 @@ class Command(BaseCommand):
         ]
         clients = []
         for data in clients_data:
-            username = data['first_name'].lower()
+            username = data['phone']
             user = User.objects.create_user(
                 username=username,
                 email=data['email'],

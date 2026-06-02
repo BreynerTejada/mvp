@@ -1,4 +1,4 @@
-import { Service, BarberListItem, Slot } from '../../api/types';
+import { Service, BarberListItem, Slot, ClientCredentials } from '../../api/types';
 import { ClientData } from '../../components/appointment/types';
 
 export interface BookingPageViewProps {
@@ -10,6 +10,7 @@ export interface BookingPageViewProps {
   selectedSlot: Slot | null;
   clientData: ClientData;
   confirmed: boolean;
+  credentials: ClientCredentials | null;
   loading: boolean;
   error: string | null;
   canGoNext: boolean;
